@@ -1,67 +1,55 @@
 package dev.mew.gameofguess.GUI;
 
+import dev.mew.gameofguess.game.Difficulties;
 import dev.mew.gameofguess.game.Difficulty;
 import dev.mew.gameofguess.game.Game;
-import java.awt.List;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.ArrayList;
+import dev.mew.gameofguess.game.Scores;
+import java.awt.event.ActionEvent;
 
 /**
+ * Game window
  *
  * @author Mew_
  */
 public class GameWindow extends javax.swing.JFrame {
 
-    private String difficultyPath = "difficulties.txt";
-    private ArrayList<Difficulty> difficulties = new ArrayList<>();
+    private final String difficultyPath = "difficulties.txt";
+    private final String scoresPath = "scores.txt";
+
+    private final Scores highscores = new Scores();
+    private final Difficulties difficulties = new Difficulties();
 
     private long guessTimerMillis = 0;
     private boolean timerRunning = false;
 
-    private Game game = new Game();
+    private final Game game = new Game();
 
     /**
      * Creates new form GameWindow
      */
     public GameWindow() {
         initComponents();
-        //loadDifficulties();
+        loadDifficulties();
+        highscores.loadScores(scoresPath);
         guessTextField.requestFocusInWindow();
 
     }
 
     private void loadDifficulties() {
-        FileReader fileReader = null;
+        difficulties.loadDifficulties(difficultyPath);
 
-        try {
-            // Load the difficulties file
-            fileReader = new FileReader(difficultyPath);
+        // Iterate through each of the difficulties and create a button corresponding with difficulty
+        for (DifficultyItem menuItem : difficulties.generateButtons()) {
+            menuItem.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    // Add action handler to change difficulty when button is pressed
+                    changeDifficulty(evt, menuItem.getDifficulty());
 
-        } catch (FileNotFoundException fileNotFound) {
-            // If the file wasn't found, 
-            // we create it and call this method again.
-            generateFile(difficultyPath);
-            loadDifficulties();
+                }
+            });
 
-        }
-        BufferedReader reader = new BufferedReader(fileReader);
-
-    }
-
-    private void generateFile(String path) {
-        // Create the new file
-        File file = new File(path);
-
-    }
-
-    private void sleep(int millis) {
-        try {
-            Thread.sleep(3000);
-
-        } catch (InterruptedException ex1) {
+            // Add the created item to the menu difficulty button
+            menuDifficulty.add(menuItem);
 
         }
     }
@@ -69,21 +57,21 @@ public class GameWindow extends javax.swing.JFrame {
     private void sendText() {
         String text = guessTextField.getText();
 
-        // Reset the second status label
+        // Reset the "YOU WIN!" label
         statusLabel2.setText("");
 
         try {
             long guessedNumber = Long.parseLong(text);
 
+            // Start timer, and get starting time from the system.
             if (!timerRunning) {
                 timerRunning = true;
                 guessTimerMillis = System.currentTimeMillis();
 
             }
-
             guess(guessedNumber);
 
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             statusLabel1.setText("That is not a number, try again.");
 
         }
@@ -101,7 +89,7 @@ public class GameWindow extends javax.swing.JFrame {
 
             // Delta time from start of game until you finished guessing.
             long timeTakenMillis = System.currentTimeMillis() - guessTimerMillis;
-            
+
             int seconds = (int) (timeTakenMillis / 1000);
 
             // Whelp! To convert ms into S.ms takes some funny business.
@@ -110,6 +98,8 @@ public class GameWindow extends javax.swing.JFrame {
 
             statusLabel1.setText("YOU WON IN " + seconds + "." + ms + " SECONDS");
             statusLabel2.setText("Type any number to play again.");
+
+            // Reset the game for another round.
             game.reset();
 
         }
@@ -123,6 +113,28 @@ public class GameWindow extends javax.swing.JFrame {
         }
     }
 
+    void changeDifficulty(ActionEvent evt, Difficulty difficulty) {
+        game.changeDifficulty(difficulty);
+        difficultyLabel.setText("Difficulty: " + difficulty.name + " 1/" + difficulty.maxNumber);
+        statusLabel1.setText("");
+        statusLabel1.setText("");
+        game.reset();
+
+    }
+
+    private void showHighscores() {
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                HighscoreWindow window = new HighscoreWindow();
+                window.setVisible(true);
+                window.showScores();
+                window.setVisible(true);
+
+            }
+        });
+    }
+
 // <editor-fold defaultstate="collapsed" desc="Generated Code">   
     /**
      * This method is called from within the constructor to initialize the form.
@@ -133,6 +145,11 @@ public class GameWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        addNewHighscore = new javax.swing.JDialog();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        yesButton = new javax.swing.JButton();
+        noButton = new javax.swing.JButton();
         contentPane = new javax.swing.JPanel();
         gamePanel = new javax.swing.JPanel();
         guessTextField = new javax.swing.JTextField();
@@ -142,18 +159,91 @@ public class GameWindow extends javax.swing.JFrame {
         difficultyLabel = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
-        fileLoadHighscores = new javax.swing.JMenuItem();
-        fileSaveHighscores = new javax.swing.JMenuItem();
+        fileShowHighscores = new javax.swing.JMenuItem();
         fileHelp = new javax.swing.JMenuItem();
         fileQuit = new javax.swing.JMenuItem();
         menuDifficulty = new javax.swing.JMenu();
-        difficultyEasy = new javax.swing.JMenuItem();
-        difficultyMedium = new javax.swing.JMenuItem();
-        difficultyHard = new javax.swing.JMenuItem();
+
+        addNewHighscore.setTitle("ADD NEW HIGHSCORE?");
+        addNewHighscore.setMinimumSize(new java.awt.Dimension(513, 300));
+        addNewHighscore.setPreferredSize(new java.awt.Dimension(513, 300));
+        addNewHighscore.setSize(new java.awt.Dimension(513, 300));
+
+        jPanel1.setMinimumSize(new java.awt.Dimension(489, 272));
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel1.setText("ADD THIS SCORE TO HIGHSCORE TABLE?");
+
+        yesButton.setText("YES");
+        yesButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                yesButtonMouseClicked(evt);
+            }
+        });
+
+        noButton.setText("NO");
+        noButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                noButtonMouseClicked(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 0, Short.MAX_VALUE)
+            .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(jPanel1Layout.createSequentialGroup()
+                    .add(73, 73, 73)
+                    .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                        .add(jLabel1)
+                        .add(jPanel1Layout.createSequentialGroup()
+                            .add(116, 116, 116)
+                            .add(yesButton)
+                            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                            .add(noButton)))
+                    .addContainerGap(73, Short.MAX_VALUE)))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 274, Short.MAX_VALUE)
+            .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(jPanel1Layout.createSequentialGroup()
+                    .add(93, 93, 93)
+                    .add(jLabel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 43, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(18, 18, 18)
+                    .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(noButton)
+                        .add(yesButton))
+                    .addContainerGap(93, Short.MAX_VALUE)))
+        );
+
+        org.jdesktop.layout.GroupLayout addNewHighscoreLayout = new org.jdesktop.layout.GroupLayout(addNewHighscore.getContentPane());
+        addNewHighscore.getContentPane().setLayout(addNewHighscoreLayout);
+        addNewHighscoreLayout.setHorizontalGroup(
+            addNewHighscoreLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(addNewHighscoreLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        addNewHighscoreLayout.setVerticalGroup(
+            addNewHighscoreLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(addNewHighscoreLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Game of Guess");
         setName("gameWindow"); // NOI18N
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         guessTextField.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         guessTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -213,17 +303,17 @@ public class GameWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .add(difficultyLabel)
                 .add(88, 88, 88)
-                .add(guessLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 28, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(guessLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 28, Short.MAX_VALUE)
                 .add(57, 57, 57)
                 .add(statusLabel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 28, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(statusLabel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 28, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .add(91, 91, 91))
             .add(gamePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                .add(gamePanelLayout.createSequentialGroup()
-                    .add(161, 161, 161)
+                .add(org.jdesktop.layout.GroupLayout.TRAILING, gamePanelLayout.createSequentialGroup()
+                    .addContainerGap(161, Short.MAX_VALUE)
                     .add(guessTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 35, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(161, Short.MAX_VALUE)))
+                    .add(161, 161, 161)))
         );
 
         org.jdesktop.layout.GroupLayout contentPaneLayout = new org.jdesktop.layout.GroupLayout(contentPane);
@@ -245,16 +335,13 @@ public class GameWindow extends javax.swing.JFrame {
 
         menuFile.setText("File");
 
-        fileLoadHighscores.setText("Load Highscores");
-        fileLoadHighscores.addActionListener(new java.awt.event.ActionListener() {
+        fileShowHighscores.setText("Show Highscores");
+        fileShowHighscores.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fileLoadHighscoresActionPerformed(evt);
+                fileShowHighscoresActionPerformed(evt);
             }
         });
-        menuFile.add(fileLoadHighscores);
-
-        fileSaveHighscores.setText("Save Highscores");
-        menuFile.add(fileSaveHighscores);
+        menuFile.add(fileShowHighscores);
 
         fileHelp.setText("Help");
         menuFile.add(fileHelp);
@@ -270,31 +357,6 @@ public class GameWindow extends javax.swing.JFrame {
         menuBar.add(menuFile);
 
         menuDifficulty.setText("Difficulty");
-
-        difficultyEasy.setText("EASY");
-        difficultyEasy.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                difficultyEasyActionPerformed(evt);
-            }
-        });
-        menuDifficulty.add(difficultyEasy);
-
-        difficultyMedium.setText("MEDIUM");
-        difficultyMedium.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                difficultyMediumActionPerformed(evt);
-            }
-        });
-        menuDifficulty.add(difficultyMedium);
-
-        difficultyHard.setText("HARD");
-        difficultyHard.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                difficultyHardActionPerformed(evt);
-            }
-        });
-        menuDifficulty.add(difficultyHard);
-
         menuBar.add(menuDifficulty);
 
         setJMenuBar(menuBar);
@@ -313,26 +375,6 @@ public class GameWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void difficultyEasyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_difficultyEasyActionPerformed
-        game.changeDifficulty(Difficulty.EASY);
-        difficultyLabel.setText("Difficulty: EASY 1/100");
-        game.reset();
-
-    }//GEN-LAST:event_difficultyEasyActionPerformed
-
-    private void difficultyMediumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_difficultyMediumActionPerformed
-        game.changeDifficulty(Difficulty.MEDIUM);
-        difficultyLabel.setText("Difficulty: MEDIUM 1/1000");
-        game.reset();
-    }//GEN-LAST:event_difficultyMediumActionPerformed
-
-    private void difficultyHardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_difficultyHardActionPerformed
-        game.changeDifficulty(Difficulty.HARD);
-        difficultyLabel.setText("Difficulty: HARD 1/10000");
-        game.reset();
-
-    }//GEN-LAST:event_difficultyHardActionPerformed
-
     private void guessTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_guessTextFieldKeyReleased
         if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
             sendText();
@@ -345,10 +387,25 @@ public class GameWindow extends javax.swing.JFrame {
 
     }//GEN-LAST:event_fileQuitActionPerformed
 
-    private void fileLoadHighscoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileLoadHighscoresActionPerformed
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        highscores.saveAll(scoresPath, "Player");
 
+    }//GEN-LAST:event_formWindowClosing
 
-    }//GEN-LAST:event_fileLoadHighscoresActionPerformed
+    private void noButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_noButtonMouseClicked
+        // TODO add your handling code here:
+        addNewHighscore.setVisible(false);
+
+    }//GEN-LAST:event_noButtonMouseClicked
+
+    private void yesButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_yesButtonMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_yesButtonMouseClicked
+
+    private void fileShowHighscoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileShowHighscoresActionPerformed
+        // TODO add your handling code here:
+        showHighscores();
+    }//GEN-LAST:event_fileShowHighscoresActionPerformed
 
     /**
      * @param args the command line arguments
@@ -386,23 +443,24 @@ public class GameWindow extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JDialog addNewHighscore;
     private javax.swing.JPanel contentPane;
-    private javax.swing.JMenuItem difficultyEasy;
-    private javax.swing.JMenuItem difficultyHard;
     private javax.swing.JLabel difficultyLabel;
-    private javax.swing.JMenuItem difficultyMedium;
     private javax.swing.JMenuItem fileHelp;
-    private javax.swing.JMenuItem fileLoadHighscores;
     private javax.swing.JMenuItem fileQuit;
-    private javax.swing.JMenuItem fileSaveHighscores;
+    private javax.swing.JMenuItem fileShowHighscores;
     private javax.swing.JPanel gamePanel;
     private javax.swing.JLabel guessLabel;
     private javax.swing.JTextField guessTextField;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu menuDifficulty;
     private javax.swing.JMenu menuFile;
+    private javax.swing.JButton noButton;
     private javax.swing.JLabel statusLabel1;
     private javax.swing.JLabel statusLabel2;
+    private javax.swing.JButton yesButton;
     // End of variables declaration//GEN-END:variables
 
 // </editor-fold>

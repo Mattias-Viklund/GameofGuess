@@ -9,7 +9,8 @@ import java.util.Timer;
  * @author Mew_
  */
 public final class Game {
-    private Random randomNumberGenerator = new Random();
+
+    private final Random randomNumberGenerator;
     private Difficulty difficulty;
 
     private long randomNumber;
@@ -20,6 +21,7 @@ public final class Game {
      * @param difficulty
      */
     public Game(Difficulty difficulty) {
+        this.randomNumberGenerator = new Random();
         changeDifficulty(difficulty);
         generateNewNumber();
 
@@ -28,31 +30,11 @@ public final class Game {
     /**
      * Initialize game with the standard EASY difficulty level.
      *
-     * @param difficulty
      */
     public Game() {
-        changeDifficulty(Difficulty.EASY);
+        this.randomNumberGenerator = new Random();
+        changeDifficulty(Difficulties.EASY);
         generateNewNumber();
-
-    }
-
-    public boolean isEqual(long number) {
-        if (number == randomNumber) {
-            return true;
-        }
-
-        return false;
-
-    }
-
-    public boolean higher(long number) {
-        // Check if it's higher or lower than the random number.
-        if (number > randomNumber) {
-            return true;
-            
-        }
-
-        return false;
 
     }
 
@@ -73,9 +55,10 @@ public final class Game {
 
     /**
      * Fancier version of nextLong, allows clamping- 0 to n.
+     *
      * @param rng
      * @param max
-     * @return 
+     * @return
      */
     private long nextLong(Random rng, long max) {
         long bits, val;
@@ -84,7 +67,7 @@ public final class Game {
             val = bits % max;
         } while (bits - val + (max - 1) < 0L);
         return val;
-        
+
     }
 
     public void reset() {
