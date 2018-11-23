@@ -32,7 +32,7 @@ public class Score implements Comparable<Score> {
     }
     
     public String getScoreData(){
-        return difficulty.name + ", " + guesses + " GUESSES, " + time + "ms, " + name;
+        return guesses + " GUESSES in " + time + "(ms) by " + name;
         
     }
 

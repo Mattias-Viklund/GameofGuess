@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import dev.mew.gameofguess.util.Utils;
+import java.io.BufferedWriter;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -103,13 +104,7 @@ public class Scores {
      * @param playerName Name of player
      */
     public void saveAll(String path, String playerName) {
-        InputStreamReader isr;
-        try {
-            isr = new FileReader(path);
-            BufferedReader reader = new BufferedReader(isr);
-        } catch (FileNotFoundException ex) {
-
-        }
+        BufferedWriter writer = Utils.openOrCreateFile("");
 
         for (Score score : scores) {
 
