@@ -160,7 +160,6 @@ public class GameWindow extends javax.swing.JFrame {
         menuBar = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         fileShowHighscores = new javax.swing.JMenuItem();
-        fileHelp = new javax.swing.JMenuItem();
         fileQuit = new javax.swing.JMenuItem();
         menuDifficulty = new javax.swing.JMenu();
 
@@ -343,9 +342,6 @@ public class GameWindow extends javax.swing.JFrame {
         });
         menuFile.add(fileShowHighscores);
 
-        fileHelp.setText("Help");
-        menuFile.add(fileHelp);
-
         fileQuit.setText("Quit");
         fileQuit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -446,7 +442,6 @@ public class GameWindow extends javax.swing.JFrame {
     private javax.swing.JDialog addNewHighscore;
     private javax.swing.JPanel contentPane;
     private javax.swing.JLabel difficultyLabel;
-    private javax.swing.JMenuItem fileHelp;
     private javax.swing.JMenuItem fileQuit;
     private javax.swing.JMenuItem fileShowHighscores;
     private javax.swing.JPanel gamePanel;

@@ -45,7 +45,7 @@ public class Difficulties {
 
                 if (readData != null) {
                     ParseLine(readData);
-                    
+
                 }
             }
         } catch (Exception ex) {

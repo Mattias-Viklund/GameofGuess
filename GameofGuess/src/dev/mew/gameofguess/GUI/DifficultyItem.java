@@ -11,18 +11,19 @@ import javax.swing.JMenuItem;
 /**
  *
  * @author elev
- */
+// */
 public class DifficultyItem extends JMenuItem {
+
     private final Difficulty difficulty;
-    
+
     public DifficultyItem(Difficulty difficulty) {
         this.difficulty = difficulty;
         this.setText(difficulty.name);
-        
+
     }
-    
-    public Difficulty getDifficulty(){
+
+    public Difficulty getDifficulty() {
         return difficulty;
-        
+
     }
 }

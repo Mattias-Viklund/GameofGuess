@@ -7,8 +7,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import dev.mew.gameofguess.util.Utils;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Handles scores, along with loading and saving
@@ -18,14 +21,15 @@ import java.util.Collections;
 public class Scores {
 
     public static final ArrayList<Score> scores = new ArrayList<Score>();
+    private final ArrayList<Score> loadedScores = new ArrayList<Score>();
 
     public Scores() {
 
     }
-    
-    public ArrayList<Score> getScores(){
+
+    public ArrayList<Score> getScores() {
         return scores;
-        
+
     }
 
     public boolean loadScores(String scoresPath) {
@@ -38,7 +42,7 @@ public class Scores {
 
                 if (readData != null) {
                     ParseLine(readData);
-                    
+
                 }
             }
         } catch (Exception ex) {
@@ -90,6 +94,7 @@ public class Scores {
         if (scoreDifficulty != null) {
             Score s = new Score(scoreDifficulty, guessCount, timems);
             scores.add(s);
+            loadedScores.add(s);
 
         }
 
@@ -107,26 +112,40 @@ public class Scores {
         BufferedWriter writer = Utils.openOrCreateFile("");
 
         for (Score score : scores) {
+            boolean write = true;
+            for (Score s : loadedScores) {
+                // If it's one of the already saved scores, don't save it again.
+                if (score.ID == s.ID) {
+                    write = false;
+                }
 
+            }
+
+            if (write) {
+                try {
+                    // Write the score in a special format "DIFFICULTY,GUESSES,TIMEINMS,PLAYER"
+                    writer.write(score.getSerializedData());
+
+                } catch (IOException ex) {
+                    // Do something if the line can't be written.
+
+                }
+            }
         }
     }
 
-    public void saveNewScore(Score score) {
-
-    }
-    
-    public static ArrayList<Score> getScoresByDifficulty(Difficulty d){
+    public static ArrayList<Score> getScoresByDifficulty(Difficulty d) {
         ArrayList<Score> sc = new ArrayList<Score>();
-        
-        for (Score s : scores)
-        {
-            if (s.getDifficulty() == d)
+
+        for (Score s : scores) {
+            if (s.getDifficulty() == d) {
                 sc.add(s);
-            
+            }
+
         }
         Collections.sort(sc);
-        
+
         return sc;
-        
+
     }
 }

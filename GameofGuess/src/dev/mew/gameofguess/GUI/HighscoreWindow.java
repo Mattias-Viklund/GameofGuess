@@ -17,12 +17,13 @@ import javax.swing.JList;
  * @author elev
  */
 public class HighscoreWindow extends javax.swing.JFrame {
+
     /**
      * Creates new form HighscoresWindow
      */
     public HighscoreWindow() {
         initComponents();
-        
+
     }
 
     public void clear() {
@@ -32,14 +33,13 @@ public class HighscoreWindow extends javax.swing.JFrame {
 
     public void showScores() {
         for (Difficulty d : Difficulties.difficulties) {
-            listModel.addElement("--"+d.name);
-            for (Score s : Scores.getScoresByDifficulty(d))
-            {
+            listModel.addElement("--" + d.name);
+            for (Score s : Scores.getScoresByDifficulty(d)) {
                 listModel.addElement(s.getScoreData());
-                
+
             }
             listModel.addElement("\n");
-            
+
         }
     }
 
