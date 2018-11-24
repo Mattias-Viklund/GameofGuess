@@ -6,7 +6,7 @@ import java.util.Timer;
 /**
  * Holds the game, and handles guessing.
  *
- * @author Mew_
+ * @author Mattias Viklund
  */
 public final class Game {
 
@@ -18,7 +18,7 @@ public final class Game {
     /**
      * Initialize game with a difficulty level
      *
-     * @param difficulty
+     * @param difficulty difficulty of the game
      */
     public Game(Difficulty difficulty) {
         this.randomNumberGenerator = new Random();
@@ -53,11 +53,16 @@ public final class Game {
 
     }
 
+    public Difficulty getDifficulty() {
+        return difficulty;
+
+    }
+
     /**
      * Fancier version of nextLong, allows clamping- 0 to n.
      *
-     * @param rng
-     * @param max
+     * @param rng random number generator
+     * @param max max number to generate to.
      * @return
      */
     private long nextLong(Random rng, long max) {

@@ -1,40 +1,48 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dev.mew.gameofguess.game;
 
 import dev.mew.gameofguess.GUI.DifficultyItem;
 import java.io.BufferedReader;
 import java.util.ArrayList;
-import javax.swing.JMenuItem;
 import dev.mew.gameofguess.util.Utils;
 
 /**
  * Holds and handles difficulties created
  *
- * @author elev
+ * @author Mattias Viklund
  */
 public class Difficulties {
 
+    // List of all difficulties
     public static final ArrayList<Difficulty> difficulties = new ArrayList<Difficulty>();
 
+    // Standard difficulties
     public static final Difficulty EASY = new Difficulty("EASY", 100);
     public static final Difficulty MEDIUM = new Difficulty("MEDIUM", 1000);
     public static final Difficulty HARD = new Difficulty("HARD", 10000);
 
-    public static Difficulty getDifficultyByName(String difficulty) {
+    /**
+     * Do we have a difficulty by the name of difficulty
+     *
+     * @param difficulty name of difficulty
+     * @return
+     */
+    public static Difficulty tryGetDifficultyByName(String difficulty) {
         for (Difficulty d : difficulties) {
             if (d.name.toLowerCase().equals(difficulty.toLowerCase())) {
                 return d;
-            }
 
+            }
         }
         return null;
 
     }
 
+    /**
+     * Load difficulties from a text file
+     *
+     * @param difficultiesPath path to the file
+     * @return
+     */
     public boolean loadDifficulties(String difficultiesPath) {
         BufferedReader reader = Utils.loadOrCreateFile(difficultiesPath);
 
@@ -56,6 +64,7 @@ public class Difficulties {
 
     }
 
+    // Generate menu items for each of the difficulties loaded
     public DifficultyItem[] generateButtons() {
         DifficultyItem[] items = new DifficultyItem[difficulties.size()];
 
@@ -91,6 +100,7 @@ public class Difficulties {
         int guesses;
 
         try {
+            // Match up array elements to the variables
             difficulty = splitLine[0];
             guesses = Integer.parseInt(splitLine[1]);
 
@@ -101,9 +111,8 @@ public class Difficulties {
         }
 
         // Create a new difficulty if an old one doesn't exist.
-        if (Difficulties.getDifficultyByName(difficulty) == null) {
-            Difficulty newDifficulty = new Difficulty(difficulty, guesses);
-            return true;
+        if (Difficulties.tryGetDifficultyByName(difficulty) == null) {
+            return createNewDifficulty(difficulty, guesses);
 
         }
 
@@ -112,7 +121,7 @@ public class Difficulties {
     }
 
     public static boolean createNewDifficulty(String name, long chance) {
-        Difficulty exists = getDifficultyByName(name);
+        Difficulty exists = tryGetDifficultyByName(name);
         if (exists != null) {
             return false;
         }
