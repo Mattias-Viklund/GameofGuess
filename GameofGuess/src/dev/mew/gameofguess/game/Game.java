@@ -1,7 +1,6 @@
 package dev.mew.gameofguess.game;
 
 import java.util.Random;
-import java.util.Timer;
 
 /**
  * Holds the game, and handles guessing.
@@ -75,6 +74,9 @@ public final class Game {
 
     }
 
+    /**
+     * Reset the game
+     */
     public void reset() {
         generateNewNumber();
 

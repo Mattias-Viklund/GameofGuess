@@ -1,21 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dev.mew.gameofguess.GUI;
 
 import dev.mew.gameofguess.game.Difficulty;
 import javax.swing.JMenuItem;
 
 /**
+ * Menu Item difficulty container
  *
- * @author elev
-// */
+ * @author Mew_
+ */
 public class DifficultyItem extends JMenuItem {
 
     private final Difficulty difficulty;
 
+    // Give this item a difficulty, and assign the name of the difficulty
+    // as the item text.
     public DifficultyItem(Difficulty difficulty) {
         this.difficulty = difficulty;
         this.setText(difficulty.name);

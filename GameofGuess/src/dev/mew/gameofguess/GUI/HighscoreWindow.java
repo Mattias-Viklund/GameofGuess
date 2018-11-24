@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package dev.mew.gameofguess.GUI;
 
 import dev.mew.gameofguess.game.Difficulties;
@@ -8,9 +13,8 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
 /**
- * Displays high scores in a list, ordered by difficulty
  *
- * @author Mattias Viklund
+ * @author elev
  */
 public class HighscoreWindow extends javax.swing.JFrame {
 
@@ -22,7 +26,6 @@ public class HighscoreWindow extends javax.swing.JFrame {
 
     }
 
-    // Clear all the elements off the list
     public void clear() {
         listModel.clear();
 
@@ -34,7 +37,6 @@ public class HighscoreWindow extends javax.swing.JFrame {
         Scores.generateAverages();
         
         for (Difficulty d : Difficulties.difficulties) {
-            // Separate difficulties by adding "--"
             listModel.addElement("--" + d.name);
             for (Score s : Scores.getScoresByDifficulty(d)) {
                 listModel.addElement(s.getScoreData());
@@ -45,7 +47,6 @@ public class HighscoreWindow extends javax.swing.JFrame {
         }
     }
 
-    // Don't touch the spaghett
     // <editor-fold defaultstate="collapsed" desc="Generated Code">  
     /**
      * This method is called from within the constructor to initialize the form.

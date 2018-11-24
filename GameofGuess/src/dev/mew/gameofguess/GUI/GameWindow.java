@@ -199,7 +199,7 @@ public class GameWindow extends javax.swing.JFrame {
         });
     }
 
-    /// Actually a mess, please don't view.
+    /// We do not touch the holy GUI spaghetti code
 // <editor-fold defaultstate="collapsed" desc="Generated Code">   
     /**
      * This method is called from within the constructor to initialize the form.
